@@ -40,6 +40,7 @@ const CountryCapitalGame = ({ data }: { data: Record<string, string> }) => {
               : ''
           }`}
           onClick={() => {
+            console.log(options);
             if (!selected) {
               setSelected(option);
               setOptions(
@@ -63,7 +64,11 @@ const CountryCapitalGame = ({ data }: { data: Record<string, string> }) => {
                 setOptions(
                   options.filter((opt) => {
                     return !(
-                      opt.value === selected.value || opt.value === option.value
+                      // Germany Berlin France Paris Wales Cardiff
+                      (
+                        opt.value === selected.value ||
+                        opt.value === option.value
+                      )
                     );
                   })
                 );
