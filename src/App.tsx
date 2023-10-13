@@ -1,7 +1,14 @@
 import './App.css';
 
+import CountryCapitalGame from './game/CountryCapitalGame';
+
 function App() {
-  return <></>;
+  const data = { Germany: 'Berlin', France: 'Paris', Wales: 'Cardiff' };
+  return (
+    <>
+      <CountryCapitalGame data={data} />
+    </>
+  );
 }
 
 export default App;
