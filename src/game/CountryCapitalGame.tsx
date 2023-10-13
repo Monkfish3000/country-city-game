@@ -12,28 +12,75 @@ const CountryCapitalGame = ({ data }: { data: Record<string, string> }) => {
   const capitals = Object.values(data);
 
   const [options, setOptions] = useState<Option[]>(
-    [...countries, ...capitals].map((value) => ({
-      value,
-      state: 'DEFAULT',
-    }))
+    [...countries, ...capitals]
+      .sort(() => Math.random() - 0.5)
+      .map((value) => ({
+        value,
+        state: 'DEFAULT',
+      }))
   );
+
+  const [selected, setSelected] = useState<Option>();
+
+  const gameOver = options.length === 0;
+
+  if (gameOver) {
+    return <h1>CONGRATULATIONS 🎉</h1>;
+  }
 
   return (
     <>
       {options.map((option) => (
         <button
-          className={`${option.state === 'SELECTED' ? 'selected' : ''}`}
+          className={`${
+            option.state === 'SELECTED'
+              ? 'selected'
+              : option.state === 'WRONG'
+              ? 'wrong'
+              : ''
+          }`}
           onClick={() => {
-            setOptions(
-              options.map((opt) => {
-                return opt === option
-                  ? {
-                      ...opt,
-                      state: 'SELECTED',
-                    }
-                  : opt;
-              })
-            );
+            if (!selected) {
+              setSelected(option);
+              setOptions(
+                options.map((opt) => {
+                  return opt === option
+                    ? {
+                        ...opt,
+                        state: 'SELECTED',
+                      }
+                    : {
+                        ...opt,
+                        state: 'DEFAULT',
+                      };
+                })
+              );
+            } else {
+              if (
+                selected.value === data[option.value] ||
+                data[selected.value] === option.value
+              ) {
+                setOptions(
+                  options.filter((opt) => {
+                    return !(
+                      opt.value === selected.value || opt.value === option.value
+                    );
+                  })
+                );
+              } else {
+                setOptions(
+                  options.map((opt) => {
+                    return opt === option
+                      ? {
+                          ...opt,
+                          state: 'WRONG',
+                        }
+                      : opt;
+                  })
+                );
+              }
+              setSelected(undefined);
+            }
           }}
           key={option.value}
         >
